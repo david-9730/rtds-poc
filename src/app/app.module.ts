@@ -7,7 +7,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { reducer } from './state/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { AppEffects } from './state/app.effects';
+
+import { PubNubAngular } from 'pubnub-angular2';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [
@@ -17,10 +19,11 @@ import { AppEffects } from './state/app.effects';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    StoreModule.forRoot({ dataReducer: reducer }),
-    EffectsModule.forRoot([AppEffects])
+    StoreModule.forRoot(reducer),
+    EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument(),
   ],
-  providers: [],
+  providers: [PubNubAngular],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

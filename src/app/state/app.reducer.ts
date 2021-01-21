@@ -1,22 +1,16 @@
-import { Action, createReducer, on } from '@ngrx/store';
-import * as AppActions from './app.actions';
+import { createFeatureSelector, createReducer, Action } from '@ngrx/store';
 
-export interface State {
-  data: Array<any>;
+export interface AppState {
 }
 
-export const initialState: State = {
-  data: []
+export const initialState: AppState = {
 };
 
-const appDataReducer = createReducer(
-  initialState,
-  on(AppActions.loadDataSuccess, (state, { payload }) => ({
-    ...state,
-    data: payload
-  })),
-);
+const appReducer = createReducer(initialState);
 
-export function reducer(state: State | undefined, action: Action) {
-  return appDataReducer(state, action);
+export function reducer(state: AppState | undefined, action: Action) {
+  return appReducer(state, action);
 }
+
+// Selectors
+export const selectAppState = createFeatureSelector<AppState>('app');
