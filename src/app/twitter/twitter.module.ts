@@ -7,6 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { TwitterEffects } from './state/twitter.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [TwitterDashboardComponent],
@@ -15,7 +16,8 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     TwitterRouterModule,
     StoreModule.forFeature('twitter', reducer),
     EffectsModule.forFeature([TwitterEffects]),
-    StoreDevtoolsModule.instrument()
+    StoreDevtoolsModule.instrument(),
+    ReactiveFormsModule
   ]
 })
 export class TwitterModule { }

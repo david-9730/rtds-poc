@@ -1,1 +1,14 @@
-<p>twitter-dashboard works!</p>
+<h1>Look all these Tweets</h1>
+<h2>Tweets speed: {{ twitterTweetsPerSecond$ | async }} t/s</h2>
+<div>
+    <label for="hashtag">Type any hashtag here to filter the data</label>
+    <input type="text" name="hashtag" id="hashtag" [formControl]='hashTagFilterControl'>
+</div>
+<div>
+    <ul>
+        <li *ngFor='let tweet of filteredTweets$ | async'>
+            <span>{{ tweet.message.text }}</span>
+            <span> Hashtags: <span *ngFor='let hashtag of tweet.message.entities.hashtags'> #{{ hashtag.text }} </span></span>
+        </li>
+    </ul>
+</div>

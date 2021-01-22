@@ -1,38 +1,39 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { PubNubAngular } from 'pubnub-angular2';
+import { environment } from '../../environments/environment';
+import { Tweet } from '../shared/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  channel: string;
+  private channel: string;
+  private twitterPubNubSubscribeKey = environment.twitterPubNubSubscribeKey;
+  private messages$ = new Subject<Tweet>();
 
   constructor(private pubnub: PubNubAngular) {
     this.channel = 'pubnub-twitter';
     this.pubnub = pubnub;
   }
 
-  getTwitterRTData(): Observable<any> {
-
-    const messages$ = new BehaviorSubject<any>(null);
+  getTwitterRTDataObservable(): Observable<Tweet> {
 
     this.pubnub.init({
-      subscribeKey: 'sub-c-78806dd4-42a6-11e4-aed8-02ee2ddab7fe'
+      subscribeKey: this.twitterPubNubSubscribeKey
     });
 
     this.pubnub.getMessage(this.channel, msg => {
       console.log('From Service:', msg);
-      messages$.next(msg);
+      this.messages$.next(msg);
     });
 
     this.pubnub.subscribe({
         channels: [this.channel],
-        withPresence: true,
-        triggerEvents: ['message', 'presence', 'status']
+        triggerEvents: ['message']
     });
 
-    return messages$.asObservable();
+    return this.messages$.asObservable();
   }
 }
