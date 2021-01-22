@@ -1,0 +1,22 @@
+.live-tweets-container {
+  padding: 1% 5%;
+
+  &--tweets-speed {
+    margin: 1% 0%;
+  }
+
+  &--tweets-list {
+    width: 30%;
+    max-height: 600px;
+    overflow: auto scroll;
+
+    .mat-card {
+        max-width: 300px;
+        margin: 5% auto;
+
+        .header-image {
+          background-size: cover;
+        }
+    }
+  }
+}

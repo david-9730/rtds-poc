@@ -21,11 +21,10 @@ export class TwitterDashboardComponent implements OnInit, OnDestroy {
     select(selectTwitterTweetsPerSecond),
     filter(state => !!state)
   );
-  
-  private twitterTweets$: Observable<Tweet[]> = this.twitterStore.pipe(
+
+  public twitterTweets$: Observable<Tweet[]> = this.twitterStore.pipe(
     select(selectTwitterTweets),
-    filter(state => !!state),
-    // tap(value => console.log('From component:', value))
+    filter(state => !!state)
   );
 
   hashTagFilterControl = new FormControl('');
@@ -37,13 +36,12 @@ export class TwitterDashboardComponent implements OnInit, OnDestroy {
     map(([tweets, hashtagValue]) => {
       if (hashtagValue !== '') {
         return tweets.filter(tweet => {
-          return !!tweet.message.entities.hashtags.find(hashtag => hashtag.text.startsWith(hashtagValue));
+          return !!tweet.message.entities.hashtags.find(hashtag => hashtag.text.toLowerCase().includes(hashtagValue));
         });
       } else {
         return tweets;
       }
     }),
-    // tap(result => console.log(result)),
     takeUntil(this.componentDestroy$)
   );
 

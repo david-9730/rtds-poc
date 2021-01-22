@@ -8,6 +8,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { TwitterEffects } from './state/twitter.effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [TwitterDashboardComponent],
@@ -17,7 +20,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     StoreModule.forFeature('twitter', reducer),
     EffectsModule.forFeature([TwitterEffects]),
     StoreDevtoolsModule.instrument(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDividerModule,
+    MatInputModule,
+    MatCardModule
   ]
 })
 export class TwitterModule { }

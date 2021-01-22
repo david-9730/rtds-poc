@@ -25,7 +25,6 @@ export class DataService {
     });
 
     this.pubnub.getMessage(this.channel, msg => {
-      console.log('From Service:', msg);
       this.messages$.next(msg);
     });
 

@@ -11,7 +11,6 @@ export class TwitterEffects {
   loadData$ = createEffect(() => this.actions$.pipe(
     ofType(twitterActions.listenTwitterTweets),
     switchMap(() => this.dataService.getTwitterRTDataObservable().pipe(
-      // tap(result => console.log('From Effect:', result)),
       filter(tweet => !!tweet),
       map(tweet => twitterActions.insertTwitterTweet({payload: tweet})),
       catchError(() => EMPTY)
@@ -22,7 +21,6 @@ export class TwitterEffects {
     ofType(twitterActions.listenTwitterTweets),
     exhaustMap(() => this.dataService.getTwitterRTDataObservable().pipe(
       bufferTime(1000),
-      tap(tweets => console.log(tweets.length)),
       map(tweets => twitterActions.updateTweetsPerSecond({payload: tweets.length}))
     ))
   ));

@@ -1,14 +1,27 @@
-<h1>Look all these Tweets</h1>
-<h2>Tweets speed: {{ twitterTweetsPerSecond$ | async }} t/s</h2>
-<div>
-    <label for="hashtag">Type any hashtag here to filter the data</label>
-    <input type="text" name="hashtag" id="hashtag" [formControl]='hashTagFilterControl'>
-</div>
-<div>
-    <ul>
-        <li *ngFor='let tweet of filteredTweets$ | async'>
-            <span>{{ tweet.message.text }}</span>
-            <span> Hashtags: <span *ngFor='let hashtag of tweet.message.entities.hashtags'> #{{ hashtag.text }} </span></span>
-        </li>
-    </ul>
+<div class="live-tweets-container">
+  <h1>Look all these Tweets</h1>
+  <mat-divider></mat-divider>
+  <div class="live-tweets-container--tweets-speed">
+    <span>Tweets speed: {{ twitterTweetsPerSecond$ | async }} t/s</span><br>
+    <span># of received Tweets: {{ (twitterTweets$ | async)?.length }}</span>
+  </div>
+  <div class="live-tweets-container--tweets-filters">
+    <span>Hashtag Filter: </span>
+    <mat-form-field>
+      <input matInput [formControl]="hashTagFilterControl" />
+    </mat-form-field>
+  </div>
+  <div class="live-tweets-container--tweets-list">
+    <mat-card *ngFor="let tweet of filteredTweets$ | async">
+      <mat-card-header>
+        <div mat-card-avatar class="header-image" style="background-image: url('{{ tweet.message.user.profile_image_url }}');" ></div>
+        <mat-card-title>{{ tweet.message.user.name }}</mat-card-title>
+        <mat-card-subtitle>@{{ tweet.message.user.screen_name }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ tweet.message.text }}</p>
+        <p *ngIf='tweet.message.entities.hashtags.length' >Used Hashtags: <span *ngFor='let hashtag of tweet.message.entities.hashtags'> #{{ hashtag.text }} </span></p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
