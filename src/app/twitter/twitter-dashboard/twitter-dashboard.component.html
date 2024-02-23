@@ -1,14 +1,20 @@
 <div class="live-tweets-container">
   <h1>Look all these Tweets</h1>
-  <button mat-button (click)="onStartListeningTweetsClick()" [disabled]="twitterListening$ | async">Start Listening Tweets</button>
-  <button mat-button (click)="onStopListeningTweetsClick()" [disabled]="!(twitterListening$ | async)">Stop Listening Tweets</button>
+  <div class="live-tweets-container--tweets-actions">
+    <button mat-raised-button color="primary" (click)="onStartListeningTweetsClick()" [disabled]="twitterListening$ | async">Start Listening Tweets</button>
+    <button mat-raised-button color="accent" (click)="onStopListeningTweetsClick()" [disabled]="!(twitterListening$ | async)">Stop Listening Tweets</button>
+  </div>
   <mat-divider></mat-divider>
-  <div class="live-tweets-container--tweets-speed">
+  <div class="live-tweets-container--tweets-info">
     <span>Tweets speed: {{ twitterTweetsPerSecond$ | async }} t/s</span><br>
-    <span># of received Tweets: {{ (twitterTweets$ | async)?.length }}</span>
+    <span># of Tweets in List: {{ (twitterTweets$ | async)?.length }} - Max: 100</span><br>
+    <span># of deleted Tweets from the list: {{ twitterDeletedTweets$ | async }}</span>
   </div>
   <div class="live-tweets-container--tweets-filters">
-    <span>Hashtag Filter: </span>
+    <span>Available Hashtags:
+      <ng-container *ngFor="let hashtag of twitterTweetsHashTags$ | async; let index = index;">{{ index ? '- ' : '' }}#{{ hashtag.text }} </ng-container>
+    </span><br>
+    <span>Hashtag Filter (without the #): </span>
     <mat-form-field>
       <input matInput [formControl]="hashTagFilterControl" />
     </mat-form-field>
@@ -22,7 +28,7 @@
       </mat-card-header>
       <mat-card-content>
         <p>{{ tweet.message.text }}</p>
-        <p *ngIf='tweet.message.entities.hashtags.length' >Used Hashtags: <span *ngFor='let hashtag of tweet.message.entities.hashtags'> #{{ hashtag.text }} </span></p>
+        <p *ngIf='tweet.message.entities.hashtags.length'>Used Hashtags: <span *ngFor='let hashtag of tweet.message.entities.hashtags'> #{{ hashtag.text }} </span></p>
       </mat-card-content>
     </mat-card>
   </div>

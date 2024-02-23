@@ -6,12 +6,14 @@ export interface TwitterState {
   listening: boolean;
   tweets: Tweet[];
   tweetsPerSecond: number;
+  deletedTweets: number;
 }
 
 export const initialState: TwitterState = {
   listening: false,
   tweets: [],
-  tweetsPerSecond: 0
+  tweetsPerSecond: 0,
+  deletedTweets: 0
 };
 
 const twitterReducer = createReducer(
@@ -23,6 +25,11 @@ const twitterReducer = createReducer(
   on(TwitterActions.insertTwitterTweet, (state, { payload }) => ({
     ...state,
     tweets: [ ...state.tweets, payload ]
+  })),
+  on(TwitterActions.deleteFirstTwitterTweet, (state) => ({
+    ...state,
+    tweets: state.tweets.slice(1, state.tweets.length),
+    deletedTweets: state.deletedTweets + 1
   })),
   on(TwitterActions.updateTweetsPerSecond, (state, { payload }) => ({
     ...state,
@@ -47,4 +54,8 @@ export const selectTwitterTweets = createSelector(
 export const selectTwitterTweetsPerSecond = createSelector(
   selectTwitterState,
   (state: TwitterState) => state.tweetsPerSecond
+);
+export const selectTwitterDeletedTweets = createSelector(
+  selectTwitterState,
+  (state: TwitterState) => state.deletedTweets
 );

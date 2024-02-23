@@ -1,18 +1,23 @@
 .live-tweets-container {
-  padding: 1% 5%;
+  padding: 1rem 2rem;
 
-  &--tweets-speed {
-    margin: 1% 0%;
+  &--tweets-actions {
+    display: flex;
+    padding: 1rem 0;
+    gap: 0.5rem;
+  }
+
+  &--tweets-info {
+    margin: 0.5rem 0;
   }
 
   &--tweets-list {
-    width: 30%;
-    max-height: 600px;
+    max-height: 100vh;
     overflow: auto scroll;
 
     .mat-card {
-        max-width: 300px;
-        margin: 5% auto;
+        max-width: 18.75rem;
+        margin: 2rem auto;
 
         .header-image {
           background-size: cover;

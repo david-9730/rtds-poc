@@ -3,7 +3,7 @@ import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { Tweet } from 'src/app/shared/types';
-import { selectTwitterListening, selectTwitterTweetsPerSecond, TwitterState } from '../state/twitter.reducer';
+import { selectTwitterDeletedTweets, selectTwitterListening, selectTwitterTweetsPerSecond, TwitterState } from '../state/twitter.reducer';
 import { selectTwitterTweets } from '../state/twitter.reducer';
 import { FormControl } from '@angular/forms';
 import { startListenTwitterTweets, stopListenTwitterTweets } from '../state/twitter.actions';
@@ -23,11 +23,21 @@ export class TwitterDashboardComponent implements OnDestroy {
 
   public twitterTweets$: Observable<Tweet[]> = this.twitterStore.pipe(
     select(selectTwitterTweets),
-    filter(state => !!state)
+    filter(state => !!state),
+    map(tweets => ([...tweets].reverse()))
+  );
+
+  public twitterTweetsHashTags$: Observable<{text: string}[]> = this.twitterTweets$.pipe(
+    map(tweets => tweets.map(tweet => tweet.message.entities.hashtags)),
+    map(tweetsHashTags => tweetsHashTags.reduce((acc, curVal) => acc.concat(curVal), []))
   );
 
   public twitterListening$: Observable<boolean> = this.twitterStore.pipe(
     select(selectTwitterListening)
+  );
+
+  public twitterDeletedTweets$: Observable<number> = this.twitterStore.pipe(
+    select(selectTwitterDeletedTweets),
   );
 
   hashTagFilterControl = new FormControl('');
@@ -36,16 +46,16 @@ export class TwitterDashboardComponent implements OnDestroy {
     this.twitterTweets$,
     this.hashTagFilterControl.valueChanges.pipe(startWith(''))
   ]).pipe(
+    takeUntil(this.componentDestroy$),
     map(([tweets, hashtagValue]) => {
       if (hashtagValue !== '') {
         return tweets.filter(tweet => {
-          return !!tweet.message.entities.hashtags.find(hashtag => hashtag.text.toLowerCase().includes(hashtagValue));
+          return !!tweet.message.entities.hashtags.find(hashtag => hashtag.text.toLowerCase().includes(hashtagValue.toLowerCase()));
         });
       } else {
         return tweets;
       }
     }),
-    takeUntil(this.componentDestroy$)
   );
 
   onStartListeningTweetsClick(): void {

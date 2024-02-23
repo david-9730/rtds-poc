@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [TwitterDashboardComponent],
@@ -23,7 +24,8 @@ import { MatCardModule } from '@angular/material/card';
     ReactiveFormsModule,
     MatDividerModule,
     MatInputModule,
-    MatCardModule
+    MatCardModule,
+    MatButtonModule,
   ]
 })
 export class TwitterModule { }

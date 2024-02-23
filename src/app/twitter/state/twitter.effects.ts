@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { DataService } from '../../services/data.service';
-import { bufferTime, catchError, endWith, filter, map, switchMap, tap } from 'rxjs/operators';
+import { bufferCount, bufferTime, catchError, endWith, filter, map, skip, switchMap, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import * as twitterActions from './twitter.actions';
 
@@ -39,6 +39,12 @@ export class TwitterEffects {
     bufferTime(1000),
     endWith([]),
     map(tweets => twitterActions.updateTweetsPerSecond({payload: tweets.length}))
+  ));
+
+  removeTweetsOnLimit$ = createEffect(() => this.actions$.pipe(
+    ofType(twitterActions.insertTwitterTweet),
+    skip(100),
+    map(() => twitterActions.deleteFirstTwitterTweet())
   ));
 
   constructor(private actions$: Actions, private dataService: DataService) {}
