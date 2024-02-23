@@ -3,17 +3,23 @@ import { Tweet } from 'src/app/shared/types';
 import * as TwitterActions from './twitter.actions';
 
 export interface TwitterState {
+  listening: boolean;
   tweets: Tweet[];
   tweetsPerSecond: number;
 }
 
 export const initialState: TwitterState = {
+  listening: false,
   tweets: [],
   tweetsPerSecond: 0
 };
 
 const twitterReducer = createReducer(
   initialState,
+  on(TwitterActions.updateListening, (state, { payload }) => ({
+    ...state,
+    listening: payload
+  })),
   on(TwitterActions.insertTwitterTweet, (state, { payload }) => ({
     ...state,
     tweets: [ ...state.tweets, payload ]
@@ -30,6 +36,10 @@ export function reducer(state: TwitterState | undefined, action: Action): Twitte
 
 // Selectors
 export const selectTwitterState = createFeatureSelector<TwitterState>('twitter');
+export const selectTwitterListening = createSelector(
+  selectTwitterState,
+  (state: TwitterState) => state.listening
+);
 export const selectTwitterTweets = createSelector(
   selectTwitterState,
   (state: TwitterState) => state.tweets

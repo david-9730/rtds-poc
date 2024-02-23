@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  twitterPubNubSubscribeKey: 'sub-c-78806dd4-42a6-11e4-aed8-02ee2ddab7fe'
+  twitterPubNubSubscribeKey: 'sub-c-d00e0d32-66ac-4628-aa65-a42a1f0c493b'
 };
 
 /*

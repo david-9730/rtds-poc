@@ -1,5 +1,7 @@
 <div class="live-tweets-container">
   <h1>Look all these Tweets</h1>
+  <button mat-button (click)="onStartListeningTweetsClick()" [disabled]="twitterListening$ | async">Start Listening Tweets</button>
+  <button mat-button (click)="onStopListeningTweetsClick()" [disabled]="!(twitterListening$ | async)">Stop Listening Tweets</button>
   <mat-divider></mat-divider>
   <div class="live-tweets-container--tweets-speed">
     <span>Tweets speed: {{ twitterTweetsPerSecond$ | async }} t/s</span><br>

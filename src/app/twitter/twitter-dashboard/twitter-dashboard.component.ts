@@ -1,30 +1,33 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { combineLatest, Observable, Subject } from 'rxjs';
-import { filter, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, startWith, takeUntil } from 'rxjs/operators';
 import { Tweet } from 'src/app/shared/types';
-import { listenTwitterTweets } from '../state/twitter.actions';
-import { selectTwitterTweetsPerSecond, TwitterState } from '../state/twitter.reducer';
+import { selectTwitterListening, selectTwitterTweetsPerSecond, TwitterState } from '../state/twitter.reducer';
 import { selectTwitterTweets } from '../state/twitter.reducer';
 import { FormControl } from '@angular/forms';
+import { startListenTwitterTweets, stopListenTwitterTweets } from '../state/twitter.actions';
 
 @Component({
   selector: 'app-twitter-dashboard',
   templateUrl: './twitter-dashboard.component.html',
   styleUrls: ['./twitter-dashboard.component.scss']
 })
-export class TwitterDashboardComponent implements OnInit, OnDestroy {
+export class TwitterDashboardComponent implements OnDestroy {
 
   private componentDestroy$: Subject<boolean> = new Subject();
 
   public twitterTweetsPerSecond$: Observable<number> = this.twitterStore.pipe(
     select(selectTwitterTweetsPerSecond),
-    filter(state => !!state)
   );
 
   public twitterTweets$: Observable<Tweet[]> = this.twitterStore.pipe(
     select(selectTwitterTweets),
     filter(state => !!state)
+  );
+
+  public twitterListening$: Observable<boolean> = this.twitterStore.pipe(
+    select(selectTwitterListening)
   );
 
   hashTagFilterControl = new FormControl('');
@@ -45,8 +48,12 @@ export class TwitterDashboardComponent implements OnInit, OnDestroy {
     takeUntil(this.componentDestroy$)
   );
 
-  ngOnInit(): void {
-    this.twitterStore.dispatch(listenTwitterTweets());
+  onStartListeningTweetsClick(): void {
+    this.twitterStore.dispatch(startListenTwitterTweets());
+  }
+
+  onStopListeningTweetsClick(): void {
+    this.twitterStore.dispatch(stopListenTwitterTweets());
   }
 
   ngOnDestroy(): void {

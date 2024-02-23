@@ -11,21 +11,21 @@ export class DataService {
 
   private channel: string;
   private twitterPubNubSubscribeKey = environment.twitterPubNubSubscribeKey;
-  private messages$ = new Subject<Tweet>();
+  private messages$?: Subject<Tweet>;
 
   constructor(private pubnub: PubNubAngular) {
     this.channel = 'pubnub-twitter';
     this.pubnub = pubnub;
-  }
-
-  getTwitterRTDataObservable(): Observable<Tweet> {
-
     this.pubnub.init({
       subscribeKey: this.twitterPubNubSubscribeKey
     });
+  }
+
+  getTwitterRTDataObservable(): Observable<Tweet> {
+    this.messages$ = new Subject();
 
     this.pubnub.getMessage(this.channel, msg => {
-      this.messages$.next(msg);
+      this.messages$!.next(msg);
     });
 
     this.pubnub.subscribe({
@@ -34,5 +34,14 @@ export class DataService {
     });
 
     return this.messages$.asObservable();
+  }
+
+  cancelTwitterRTDataListening() {
+    this.pubnub.unsubscribe({
+      channels: [this.channel],
+      triggerEvents: ['message']
+    });
+
+    this.messages$!.complete();
   }
 }
